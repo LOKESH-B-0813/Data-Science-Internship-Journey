@@ -1,12 +1,38 @@
-# Data Science Internship Journey
+# ML Algorithms Comparison
 
-This repository documents my learning journey during my Data Science internship.
+This project compares two machine learning algorithms:
 
-It includes:
-- Python programming exercises
-- Data Science concepts and practice
-- Machine Learning fundamentals
-- Assignments and daily tasks
-- Mini projects and final project work
+1. Linear Regression
+2. Decision Tree Regression
 
-The repository is updated regularly with the concepts, programs, and projects I complete throughout the internship.
+## Dataset
+
+Salary Dataset
+
+Features:
+- YearsExperience
+
+Target:
+- Salary
+
+## Linear Regression Results
+
+- R² Score: 0.90
+
+## Technologies Used
+
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+- Matplotlib
+- Jupyter Notebook
+
+## Project Structure
+
+data/
+├── salary_dataset.csv
+
+linear_regression_salary_prediction.ipynb
+
+decision_tree_salary_prediction.ipynb
