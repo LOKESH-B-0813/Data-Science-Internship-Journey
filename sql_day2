@@ -1,0 +1,140 @@
+========================================================================
+MySQL TRANSACTION CONTROL LANGUAGE (TCL) & BANKING DATABASE LAB LOG
+File: sql_day2.txt
+Author: Lokesh
+========================================================================
+
+--- PART 1: TERMINAL EXECUTION LOG ---
+
+mysql> USE stu;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> SELECT * FROM marks;
++----+---------+-------+---------+---------+-----------+------+
+| id | name    | maths | english | physics | chemistry | cs   |
++----+---------+-------+---------+---------+-----------+------+
+|  1 | Loki    |    85 |      78 |      92 |        88 |   95 |
+|  2 | Alice   |    90 |      82 |      79 |        85 |   88 |
+|  3 | Bob     |    65 |      70 |      68 |        72 |   75 |
+|  4 | Charlie |    78 |      88 |      84 |        80 |   91 |
+|  5 | David   |    95 |      91 |      89 |        94 |   99 |
++----+---------+-------+---------+---------+-----------+------+
+5 rows in set (0.00 sec)
+
+mysql> START TRANSACTION;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> INSERT INTO marks VALUE(6,'joe',67,55,45,98,77);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> COMMIT;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> START TRANSACTION;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> INSERT INTO marks VALUE(7,'ben',69,55,45,98,77);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SAVEPOINT a;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> INSERT INTO marks VALUE(8,'tom',69,55,45,98,77);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> ROLLBACK TO a;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> COMMIT;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT * FROM marks;
++----+---------+-------+---------+---------+-----------+------+
+| id | name    | maths | english | physics | chemistry | cs   |
++----+---------+-------+---------+---------+-----------+------+
+|  1 | Loki    |    85 |      78 |      92 |        88 |   95 |
+|  2 | Alice   |    90 |      82 |      79 |        85 |   88 |
+|  3 | Bob     |    65 |      70 |      68 |        72 |   75 |
+|  4 | Charlie |    78 |      88 |      84 |        80 |   91 |
+|  5 | David   |    95 |      91 |      89 |        94 |   99 |
+|  6 | joe     |    67 |      55 |      45 |        98 |   77 |
+|  7 | ben     |    69 |      55 |      45 |        98 |   77 |
++----+---------+-------+---------+---------+-----------+------+
+7 rows in set (0.00 sec)
+
+mysql> START TRANSACTION;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> INSERT INTO marks VALUE(8,'James',67,65,45,98,77);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> COMMIT;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> START TRANSACTION;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> INSERT INTO marks VALUE(9,'Abc',67,65,45,88,67);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SAVEPOINT A;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> INSERT INTO marks VALUE(10,'bb','67',65,45,88,67);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> ROLLBACK TO A;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT * FROM marks;
++----+---------+-------+---------+---------+-----------+------+
+| id | name    | maths | english | physics | chemistry | cs   |
++----+---------+-------+---------+---------+-----------+------+
+|  1 | Loki    |    85 |      78 |      92 |        88 |   95 |
+|  2 | Alice   |    90 |      82 |      79 |        85 |   88 |
+|  3 | Bob     |    65 |      70 |      68 |        72 |   75 |
+|  4 | Charlie |    78 |      88 |      84 |        80 |   91 |
+|  5 | David   |    95 |      91 |      89 |        94 |   99 |
+|  6 | joe     |    67 |      55 |      45 |        98 |   77 |
+|  7 | ben     |    69 |      55 |      45 |        98 |   77 |
+|  8 | James   |    67 |      65 |      45 |        98 |   77 |
+|  9 | Abc     |    67 |      65 |      45 |        88 |   67 |
++----+---------+-------+---------+---------+-----------+------+
+9 rows in set (0.00 sec)
+
+mysql> CREATE TABLE users (name varchar(50), balance float);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO users VALUES('user1',1500),('user2',2000);
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> START TRANSACTION;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> UPDATE users SET balance=1000 WHERE name='user1';
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM users;
++-------+---------+
+| name  | balance |
++-------+---------+
+| user1 |    1000 |
+| user2 |    2000 |
++-------+---------+
+2 rows in set (0.00 sec)
+
+
+--- PART 2: THEORETICAL DEEP DIVE & CONCEPT RECAP ---
+
+1. TRANSACTION CONTROL LANGUAGE (TCL) COMMANDS USED:
+   * START TRANSACTION: Turns off the default "autocommit" feature. All queries are held in a temporary scratchpad memory workspace.
+   * COMMIT: Saves all the pending data changes permanently down to the hard drive storage blocks.
+   * SAVEPOINT [name]: Drops a virtual flag or bookmark inside the active transaction pipeline.
+   * ROLLBACK TO [name]: Undoes or completely deletes all database data changes back to the designated bookmark, keeping previous data safe.
+
+2. LOGIC BEHIND DATA EXPERIMENTS:
+   * Why Joe and Ben were saved, but Tom disappeared: Joe was instantly protected by a direct 'COMMIT'. Ben was protected by a 'SAVEPOINT'. Tom was typed in after the savepoint, meaning 'ROLLBACK TO a' safely erased Tom without touching Ben's row.
+   * Primary Key Integrity: Attempting to input a duplicate value on ID 8 threw an active constraint failure, preventing cross-record data collision and protecting table health.
+========================================================================
