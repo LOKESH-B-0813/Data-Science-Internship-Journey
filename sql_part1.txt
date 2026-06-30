@@ -1,0 +1,96 @@
+mysql> create database try;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use try;
+Database changed
+mysql> show tables;
+Empty set (0.01 sec)
+
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> create table stu (reg_no int,name varchar(50),dept varchar(50));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;
++---------------+
+| Tables_in_try |
++---------------+
+| stu           |
++---------------+
+1 row in set (0.01 sec)
+
+mysql> select * from stu;
+Empty set (0.01 sec)
+
+mysql> insert into stu values(1,'Lokesh','AIDS');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from stu;
++--------+--------+------+
+| reg_no | name   | dept |
++--------+--------+------+
+|      1 | Lokesh | AIDS |
++--------+--------+------+
+1 row in set (0.00 sec)
+
+mysql> select id,dept from stu;
+ERROR 1054 (42S22): Unknown column 'id' in 'field list'
+mysql> select reg_no,dept from stu;
++--------+------+
+| reg_no | dept |
++--------+------+
+|      1 | AIDS |
++--------+------+
+1 row in set (0.00 sec)
+
+mysql> insert into stu values(2,'James','Aero'),(3,'abc','AI');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> insert into stu (reg_no,name) values (4,'Bbc');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select*from stu;
++--------+--------+------+
+| reg_no | name   | dept |
++--------+--------+------+
+|      1 | Lokesh | AIDS |
+|      2 | James  | Aero |
+|      3 | abc    | AI   |
+|      4 | Bbc    | NULL |
++--------+--------+------+
+4 rows in set (0.00 sec)
+
+mysql> update stu set name='xyz' where id=4;
+ERROR 1054 (42S22): Unknown column 'id' in 'where clause'
+mysql> update stu set name='xyz' where reg_no=4;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select*from stu;
++--------+--------+------+
+| reg_no | name   | dept |
++--------+--------+------+
+|      1 | Lokesh | AIDS |
+|      2 | James  | Aero |
+|      3 | abc    | AI   |
+|      4 | xyz    | NULL |
++--------+--------+------+
+4 rows in set (0.00 sec)
+
+mysql> delete from stu where reg_no=4;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select*from stu;
++--------+--------+------+
+| reg_no | name   | dept |
++--------+--------+------+
+|      1 | Lokesh | AIDS |
+|      2 | James  | Aero |
+|      3 | abc    | AI   |
++--------+--------+------+
+3 rows in set (0.01 sec)
+
+mysql> 
+
